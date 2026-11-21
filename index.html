@@ -1,0 +1,383 @@
+ <!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>CbAdminGamez</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#00e676">
+<link rel="apple-touch-icon" href="icon.jpg">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:#070b14;color:#fff;padding-bottom:80px;overflow-x:hidden}
+@keyframes rgbB{0%{border-color:#ff0055;box-shadow:0 0 12px #ff0055}33%{border-color:#00e676;box-shadow:0 0 12px #00e676}66%{border-color:#2979ff;box-shadow:0 0 12px #2979ff}100%{border-color:#ffea00;box-shadow:0 0 12px #ffea00}}
+@keyframes rgbT{0%{color:#ff0055}33%{color:#00e676}66%{color:#38bdf8}100%{color:#ffea00}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+@keyframes breathe{0%,100%{transform:scale(.8);opacity:.4}50%{transform:scale(1.5);opacity:1;box-shadow:0 0 10px currentColor}}
+@keyframes spin{100%{transform:rotate(360deg)}}
+@keyframes marq{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+@keyframes hideSp{0%,80%{opacity:1;visibility:visible}100%{opacity:0;visibility:hidden;display:none;pointer-events:none}}
+#splash{position:fixed;inset:0;background:#050811;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;animation:hideSp 1.5s forwards}
+.sp-box{width:95px;height:95px;border-radius:24px;background:#0f172a;border:3px solid #00e676;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;margin-bottom:14px;animation:rgbB 1.4s infinite,pulse 1s infinite,rgbT 1.5s infinite}
+.sp-ring{width:46px;height:46px;border-radius:50%;border:4px solid transparent;border-top-color:#00e676;border-right-color:#2979ff;border-bottom-color:#ff0055;animation:spin .8s linear infinite;margin-top:16px}
+#banned{display:none;position:fixed;inset:0;background:#070b14;z-index:9998;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px}
+.hdr{background:#0d1322;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1e293b;position:sticky;top:0;z-index:90}
+.cb-ic{background:linear-gradient(135deg,#00e676,#00b0ff);color:#000;font-weight:900;padding:6px 9px;border-radius:9px;font-size:14px}
+.wal{background:#162035;border:1px solid #00e676;padding:2px 7px;border-radius:12px;font-size:10px;color:#00e676;font-weight:bold}
+.btn-in{background:#00e676;color:#000;border:none;padding:6px 10px;border-radius:7px;font-size:11px;font-weight:900;animation:pulse 1.2s infinite}
+.btn-lk{background:#1c253b;border:1px solid #ff3d00;color:#ff3d00;padding:5px 8px;border-radius:7px;font-size:13px}
+.sbar{background:#111827;padding:7px 10px;display:flex;justify-content:space-between;align-items:center;font-size:10px;gap:4px;flex-wrap:wrap;border-bottom:1px solid #1f2937}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:10px;font-weight:900;border:1px solid}
+.dot{width:8px;height:8px;border-radius:50%;background:currentColor;animation:breathe 1s infinite}
+.tkr{background:#0a101d;overflow:hidden;white-space:nowrap;padding:6px 0;border-bottom:1px solid #1e293b}
+.tkr span{display:inline-block;color:#38bdf8;font-size:12px;font-weight:700;animation:marq 16s linear infinite}
+.qgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;padding:10px 14px}
+.qbtn{background:#131c31;border:1px solid #263554;padding:8px 3px;border-radius:9px;text-align:center;font-size:10px;font-weight:bold}
+.qbtn b{display:block;color:#00e676;font-size:9px;margin-top:2px}
+.sbox{padding:0 14px 10px}
+.sbox input,.inp{width:100%;background:#131c31;border:1px solid #2a3a5c;padding:10px;border-radius:9px;color:#fff;font-size:13px;outline:none}
+.inp{margin:5px 0 10px}
+.cats{display:flex;gap:7px;overflow-x:auto;padding:4px 14px 12px}
+.cat{background:#131c31;border:1px solid #263554;color:#cbd5e1;padding:6px 13px;border-radius:18px;font-size:11px;white-space:nowrap}
+.cat.act{background:#2979ff;color:#fff;font-weight:bold}
+.row-sec{margin-bottom:16px}
+.row-lbl{padding:0 14px 6px;font-size:11px;font-weight:900;color:#00e676;display:flex;justify-content:space-between}
+.hrow{display:flex;gap:10px;overflow-x:auto;padding:4px 14px 10px;scroll-snap-type:x mandatory}
+.gcard{flex:0 0 150px;scroll-snap-align:start;background:#0f172a;border-radius:13px;overflow:hidden;border:2px solid #2979ff;animation:rgbB 3s infinite alternate,pulse 2.5s infinite;display:flex;flex-direction:column}
+.cimg{position:relative;height:105px;background:#162238;display:flex;align-items:center;justify-content:center}
+.cimg img{width:100%;height:100%;object-fit:cover}
+.pbdg{position:absolute;top:5px;left:5px;background:#0f172a;color:#00e676;font-size:8px;font-weight:900;padding:2px 5px;border-radius:4px;border:1px solid #00e676}
+.cbody{padding:8px;flex:1;display:flex;flex-direction:column;justify-content:space-between}
+.tag{background:#1e293b;color:#38bdf8;padding:2px 5px;border-radius:4px;font-size:8px;font-weight:bold}
+.bview{width:100%;background:linear-gradient(90deg,#2979ff,#00b0ff);color:#fff;border:none;padding:7px;border-radius:7px;font-size:10px;font-weight:900;margin-top:6px}
+.ftr{margin:16px 14px;background:#0d1526;border:2px solid #00e676;border-radius:14px;padding:14px;text-align:center;animation:rgbB 3s infinite}
+.bwa{background:#25D366;color:#000;border:none;padding:11px;border-radius:9px;font-weight:900;font-size:12px;width:100%;margin-top:7px}
+.bwa2{background:#128C7E;color:#fff;border:none;padding:11px;border-radius:9px;font-weight:900;font-size:12px;width:100%;margin-top:7px}
+.bsh{background:linear-gradient(90deg,#2979ff,#d500f9);color:#fff;border:none;padding:11px;border-radius:9px;font-weight:900;font-size:12px;width:100%;margin-top:7px}
+.page{display:none;padding:14px}.page.act{display:block}
+.bbtn{background:#1e293b;color:#fff;border:none;padding:8px 13px;border-radius:8px;font-size:12px;font-weight:bold;margin-bottom:12px}
+.hero{border-radius:16px;padding:4px;border:3px solid #00e676;animation:rgbB 1.6s infinite,pulse 2s infinite;margin-bottom:12px;background:#0f172a;min-height:190px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.hero img{width:100%;height:220px;border-radius:12px;object-fit:cover}
+.bbig{width:100%;background:linear-gradient(90deg,#00b0ff,#00e5ff);color:#000;border:none;padding:13px;border-radius:11px;font-size:13px;font-weight:900}
+.fcard{background:#0f172a;border:3px solid #ffea00;border-radius:13px;padding:14px;margin:12px 0;animation:rgbB 2s infinite}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:200;align-items:center;justify-content:center;padding:14px}
+.modal.open{display:flex}
+.mbox{background:#111827;border:1px solid #334155;border-radius:15px;width:100%;max-width:400px;padding:18px;max-height:88vh;overflow-y:auto}
+.dcard{background:#111827;border:1px solid #263554;border-radius:13px;padding:14px;margin-bottom:14px}
+.dtitle{color:#00e676;font-size:14px;font-weight:900;margin-bottom:9px;border-bottom:1px solid #1e293b;padding-bottom:5px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+</style>
+</head>
+<body>
+
+<div id="splash">
+  <div class="sp-box">CB</div>
+  <div style="font-size:22px;font-weight:900;animation:rgbT 1.5s infinite">CbAdminGamez</div>
+  <div class="sp-ring"></div>
+</div>
+
+<div id="banned">
+  <h2 style="color:#ff1744;margin-bottom:8px">⛔ AKAUNTI IMEFUNGIWA</h2>
+  <p style="font-size:13px;color:#cbd5e1;margin-bottom:15px">Umefungiwa kutumia app ya CbAdminGamez.</p>
+  <button class="bwa" onclick="goWA('255790188644','Habari Admin, naomba kufunguliwa app yangu.')">💬 Wasiliana na Admin WhatsApp</button>
+</div>
+
+<div class="hdr">
+  <div style="display:flex;align-items:center;gap:9px">
+    <div class="cb-ic">CB</div>
+    <div>
+      <div style="font-weight:900;font-size:15px">CbAdmin<span style="color:#00e676">Gamez</span></div>
+      <div class="wal">Wallet: TZS <span id="wBal">0</span> / 15,000</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:6px">
+    <button class="btn-in" onclick="doInstall()">📲 Install App</button>
+    <button class="btn-lk" onclick="openLock()">🔒</button>
+  </div>
+</div>
+
+<div class="sbar">
+  <div class="pill" style="color:#00e676;border-color:#00e676;background:rgba(0,230,118,.12)"><span class="dot"></span> Live: <span id="lCnt">0</span></div>
+  <div class="pill" id="admPill" style="color:#38bdf8;border-color:#38bdf8;background:rgba(56,189,248,.12)"><span class="dot"></span> Admin: Mtandaoni</div>
+  <div style="background:#1e293b;padding:3px 7px;border-radius:10px;color:#ffea00;font-weight:bold">⏱ <span id="tmr">00:00:00</span></div>
+  <button style="background:#2979ff;color:#fff;border:none;padding:4px 8px;border-radius:10px;font-size:10px;font-weight:bold" onclick="openM('regM')">Jisajili (+1000)</button>
+</div>
+
+<div class="tkr"><span id="tkrTxt">🔥 Karibu CbAdminGamez! Jipatie magame ya Android, PC na PS • Lipia M-Pesa au kusanya Wallet TZS 15,000 upate game BURE! 🔥</span></div>
+
+<div id="homeP" class="page act" style="padding:0">
+  <div class="qgrid">
+    <div class="qbtn" onclick="openM('ordM')">📝 Order<b>Agiza Game</b></div>
+    <div class="qbtn" onclick="soc('wa',500)">📢 Channel<b>+500 TZS</b></div>
+    <div class="qbtn" onclick="soc('yt',1000)">▶️ YouTube<b>+1000 TZS</b></div>
+    <div class="qbtn" onclick="openMyG()">📂 Yangu<b>Siku 2</b></div>
+  </div>
+  <div class="sbox"><input id="qIn" onkeyup="drawG()" placeholder="🔍 Tafuta game (FTS, Bus Mod, GTA, PC, PS)..."></div>
+  <div class="cats" id="catBox">
+    <div class="cat act" onclick="setCat('Zote',this)">Zote</div>
+    <div class="cat" onclick="setCat('Bus Mods TZ',this)">Bus Mods TZ</div>
+    <div class="cat" onclick="setCat('Football',this)">Football</div>
+    <div class="cat" onclick="setCat('GTA',this)">GTA</div>
+    <div class="cat" onclick="setCat('Euro Truck 2',this)">Euro Truck 2</div>
+    <div class="cat" onclick="setCat('Bure',this)">Bure (Free)</div>
+  </div>
+  <div id="gWrap"></div>
+  <div class="ftr">
+    <h4 style="color:#00e676;font-size:14px">📲 Wasiliana na Admin & Tangaza App</h4>
+    <p style="font-size:11px;color:#cbd5e1;margin:6px 0">Ukinikosa namba kuu, tumia namba ya pili (zinafunguka WhatsApp moja kwa moja):</p>
+    <button class="bwa" onclick="goWA('255790188644','Habari CbAdminGamez! Nahitaji msaada.')">💬 WhatsApp Kuu: 0790188644</button>
+    <button class="bwa2" onclick="goWA('255795251147','Habari CbAdminGamez! Nimekukosa namba kuu.')">💬 Ukinikosa Cheki: 0795251147</button>
+    <button class="bsh" onclick="shareApp()">🚀 Alika Marafiki & Share App Hii</button>
+  </div>
+</div>
+
+<div id="detP" class="page">
+  <button class="bbtn" onclick="showP('homeP')">← Rudi Nyuma</button>
+  <div class="hero" id="dHero"></div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+    <span class="tag" id="dPlat">Android</span>
+    <span class="tag" id="dRam">RAM 2GB+</span>
+    <span class="tag" id="dSize">1.0 GB</span>
+    <span class="tag" style="color:#00e676">✔ TESTED 100%</span>
+  </div>
+  <h2 id="dTitle" style="font-size:20px;margin-bottom:12px">Game</h2>
+  <div id="dVidBox" style="display:none;margin-bottom:10px"><button class="bbig" style="background:#ff0000;color:#fff" onclick="openVid()">▶️ TAZAMA VIDEO YA GAME (YOUTUBE)</button></div>
+  <div style="background:#111c33;border:1px solid #2a3f66;border-radius:14px;padding:15px">
+    <div style="font-size:11px;color:#94a3b8">BEI YA GAME</div>
+    <div id="dPrice" style="font-size:24px;font-weight:900;margin:4px 0 12px">TZS 5,000</div>
+    <button class="bbig" id="dBtn" onclick="buyAct()">⚡ BONYEZA HAPA KUNUNUA GAME</button>
+  </div>
+  <div class="fcard">
+    <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+      <strong style="font-size:12px">📁 FAILI ZA GAME HILI</strong>
+      <span id="dLock" style="color:#ffab00;font-size:11px;font-weight:bold">🔒 LIMEFUNGWA</span>
+    </div>
+    <p id="dFInfo" style="font-size:11px;color:#cbd5e1">Inajumuisha faili zote.</p>
+    <div id="dlLinks" style="display:none;margin-top:10px"></div>
+  </div>
+  <div style="background:#0d1b2a;border:2px solid #25D366;border-radius:13px;padding:12px;text-align:center">
+    <p style="font-size:11px;margin-bottom:7px">Unahitaji msaada zaidi au kuona magame mapya?</p>
+    <button class="bwa" style="margin:0" onclick="goChan()">📢 Jiunge na WhatsApp Channel kwa msaada zaidi</button>
+  </div>
+</div>
+
+<div id="admP" class="page">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <h3 style="color:#00e676">🛡️ Dashboard Admin</h3>
+    <button class="bbtn" style="margin:0" onclick="showP('homeP')">Toka</button>
+  </div>
+  <div class="dcard">
+    <div class="dtitle">🟢 Hali ya Admin Nje</div>
+    <div class="g2">
+      <button class="bbig" style="background:#00e676" onclick="setAdm(true)">🟢 Mtandaoni</button>
+      <button class="bbig" style="background:#ff1744;color:#fff" onclick="setAdm(false)">🔴 Hayupo</button>
+    </div>
+  </div>
+  <div class="dcard">
+    <div class="dtitle">📡 Live Wateja (Usajili, Malipo & Kuchezea App)</div>
+    <div id="admFeed" style="font-size:11px;max-height:180px;overflow-y:auto">Hakuna tukio bado.</div>
+  </div>
+  <div class="dcard">
+    <div class="dtitle">🔓 Mfungulie Mteja Link</div>
+    <input id="uPhone" class="inp" placeholder="Namba ya mteja aliyelipia">
+    <select id="uGame" class="inp"></select>
+    <button class="bbig" onclick="admUnlock()">🔓 Fungua Link Kwa Mteja</button>
+  </div>
+  <div class="dcard">
+    <div class="dtitle">➕ Pandisha Game Jipya</div>
+    <input type="file" id="nImg" accept="image/*" class="inp">
+    <input id="nName" class="inp" placeholder="Jina la Game">
+    <input type="number" id="nPrice" class="inp" placeholder="Bei TZS (0 = Bure)">
+    <div class="g2">
+      <select id="nCat" class="inp"><option>Bus Mods TZ</option><option>Football</option><option>GTA</option><option>Euro Truck 2</option><option>Bure</option></select>
+      <select id="nPlat" class="inp"><option>Android</option><option>Computer / PC</option><option>PS (PlayStation)</option></select>
+    </div>
+    <div class="g3">
+      <select id="nRam" class="inp"><option>RAM 1GB+</option><option>RAM 2GB+</option><option>RAM 3GB+</option><option>RAM 4GB+</option><option>RAM 8GB+</option></select>
+      <input type="number" step="0.1" id="nSNum" class="inp" placeholder="Size (1.5)">
+      <select id="nSUnit" class="inp"><option>MB</option><option>GB</option></select>
+    </div>
+    <input id="nApk" class="inp" placeholder="Link APK / Main File">
+    <input id="nObb" class="inp" placeholder="Link OBB (Si lazima)">
+    <input id="nData" class="inp" placeholder="Link Data (Si lazima)">
+    <input id="nYt" class="inp" placeholder="Link YouTube Video (Si lazima)">
+    <button class="bbig" onclick="addG()">✅ Pandisha Game</button>
+  </div>
+  <div class="dcard">
+    <div class="dtitle">📢 Tuma Tangazo Kwa Wote</div>
+    <input id="tIn" class="inp" placeholder="Andika tangazo...">
+    <button class="bbig" style="background:#2979ff;color:#fff" onclick="setTkr()">Tuma Tangazo</button>
+  </div>
+  <div class="dcard">
+    <div class="dtitle">🚫 Udhibiti wa Wasumbufu</div>
+    <input id="trPhone" class="inp" placeholder="Namba ya Mteja">
+    <input id="trName" class="inp" placeholder="Jina la Mteja">
+    <div class="g3">
+      <button class="bbig" style="background:#ffab00;font-size:11px" onclick="ctrlU('warn')">⚠️ Last Chance</button>
+      <button class="bbig" style="background:#ff1744;color:#fff;font-size:11px" onclick="ctrlU('ban')">⛔ Funga App</button>
+      <button class="bbig" style="background:#00e676;font-size:11px" onclick="ctrlU('unban')">✅ Fungua</button>
+    </div>
+  </div>
+  <div class="dcard"><div class="dtitle">🗑️ Futa Games</div><div id="admGList"></div></div>
+</div>
+
+<div id="payM" class="modal"><div class="mbox">
+  <h3 style="color:#00e676;margin-bottom:8px">💳 Lipia Game</h3>
+  <div style="background:#1e293b;padding:10px;border-radius:9px;font-size:12px;margin-bottom:10px">
+    <b>M-Pesa:</b> 0795251147 (Juma Liwanga)<br><b>Kiasi:</b> <span id="mPrice" style="color:#ffea00">TZS 0</span>
+  </div>
+  <input id="cPhone" class="inp" placeholder="Namba yako uliyolipia">
+  <button class="bbig" style="margin-bottom:8px" onclick="confPay()">📩 Nimelipia (Tuma Risiti)</button>
+  <button class="bbig" style="background:#ffab00" onclick="payWal()">💰 Lipia Kwa Wallet (TZS <span id="mWal">0</span>)</button>
+  <div id="rgbBox" style="display:none;border:2px solid #00e676;border-radius:12px;padding:12px;margin-top:12px;text-align:center;animation:rgbB 1.5s infinite">
+    <div style="font-weight:900;margin-bottom:6px;animation:rgbT 1.5s infinite">✨ CbAdminGamez ✨</div>
+    <button class="bwa" onclick="sendPayWA()">💬 Tuma Risiti WhatsApp</button>
+  </div>
+  <button class="bbtn" style="width:100%;margin-top:10px" onclick="closeM('payM')">Funga</button>
+</div></div>
+
+<div id="regM" class="modal"><div class="mbox">
+  <h3 style="color:#38bdf8;margin-bottom:8px">👤 Jisajili (+1,000 TZS)</h3>
+  <input id="rName" class="inp" placeholder="Jina lako">
+  <input id="rPhone" class="inp" placeholder="Namba ya simu">
+  <button class="bbig" onclick="doReg()">Kamilisha Usajili</button>
+  <button class="bwa" onclick="goChan()">📢 WhatsApp Channel</button>
+  <button class="bbtn" style="width:100%;margin-top:10px" onclick="closeM('regM')">Funga</button>
+</div></div>
+
+<div id="ordM" class="modal"><div class="mbox">
+  <h3 style="color:#00e676;margin-bottom:8px">📝 Agiza Game</h3>
+  <input id="oGame" class="inp" placeholder="Jina la Game">
+  <input id="oDev" class="inp" placeholder="Kifaa (Android / PC / PS)">
+  <button class="bbig" onclick="doOrd()">Tuma Order WhatsApp</button>
+  <button class="bbtn" style="width:100%;margin-top:10px" onclick="closeM('ordM')">Funga</button>
+</div></div>
+
+<div id="myGM" class="modal"><div class="mbox">
+  <h3 style="color:#00e676;margin-bottom:8px">📂 Magame Yangu (Siku 2)</h3>
+  <div id="myGList" style="font-size:12px">Hakuna game bado.</div>
+  <button class="bbtn" style="width:100%;margin-top:10px" onclick="closeM('myGM')">Funga</button>
+</div></div>
+
+<script>
+setTimeout(function(){var s=document.getElementById('splash');if(s)s.style.display='none';},1500);
+function gs(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}}
+function ss(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(function(){});
+var defP=null;window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();defP=e;});
+function doInstall(){if(defP){defP.prompt();defP=null;}else{alert("Bonyeza nukta tatu juu kulia mwa Chrome kisha chagua Install app.");}}
+
+var seed=[
+{id:1,name:"FTS NBC 2027 TZ",price:5000,cat:"Football",plat:"Android",ram:"RAM 2GB+",size:"1.1 GB",img:"",apk:"https://mediafire.com",obb:"https://mediafire.com",data:"",yt:""},
+{id:2,name:"MALEO BUS MOD TZ",price:3000,cat:"Bus Mods TZ",plat:"Android",ram:"RAM 2GB+",size:"650 MB",img:"",apk:"https://mediafire.com",obb:"",data:"",yt:""},
+{id:3,name:"GTA SAN ANDREAS",price:4000,cat:"GTA",plat:"Android",ram:"RAM 3GB+",size:"2.4 GB",img:"",apk:"https://mediafire.com",obb:"",data:"",yt:""},
+{id:4,name:"EURO TRUCK 2 PC",price:6000,cat:"Euro Truck 2",plat:"Computer / PC",ram:"RAM 4GB+",size:"4.5 GB",img:"",apk:"https://mediafire.com",obb:"",data:"",yt:""},
+{id:5,name:"FC 26 PPSSPP PS",price:3500,cat:"Football",plat:"PS (PlayStation)",ram:"RAM 2GB+",size:"1.4 GB",img:"",apk:"https://mediafire.com",obb:"",data:"",yt:""},
+{id:6,name:"SHABIBY BUS MOD",price:2500,cat:"Bus Mods TZ",plat:"Android",ram:"RAM 2GB+",size:"520 MB",img:"",apk:"https://mediafire.com",obb:"",data:"",yt:""},
+{id:7,name:"ZARCHIVER PRO",price:0,cat:"Bure",plat:"Android",ram:"RAM 1GB+",size:"18 MB",img:"",apk:"https://mediafire.com",obb:"",data:"",yt:""},
+{id:8,name:"GTA V MOBILE",price:5000,cat:"GTA",plat:"Android",ram:"RAM 4GB+",size:"3.1 GB",img:"",apk:"https://mediafire.com",obb:"",data:"",yt:""},
+{id:9,name:"DLS 2027 TZ MOD",price:2500,cat:"Football",plat:"Android",ram:"RAM 2GB+",size:"480 MB",img:"",apk:"https://mediafire.com",obb:"",data:"",yt:""},
+{id:10,name:"TAHMEED BUS MOD",price:3000,cat:"Bus Mods TZ",plat:"Android",ram:"RAM 2GB+",size:"700 MB",img:"",apk:"https://mediafire.com",obb:"",data:"",yt:""},
+{id:11,name:"ETS2 TZ MAP MOD",price:5500,cat:"Euro Truck 2",plat:"Computer / PC",ram:"RAM 4GB+",size:"3.8 GB",img:"",apk:"https://mediafire.com",obb:"",data:"",yt:""},
+{id:12,name:"GOD OF WAR PS",price:3000,cat:"Bure",plat:"PS (PlayStation)",ram:"RAM 2GB+",size:"1.2 GB",img:"",apk:"https://mediafire.com",obb:"",data:"",yt:""},
+{id:13,name:"PES 2027 NBC",price:4500,cat:"Football",plat:"Android",ram:"RAM 3GB+",size:"1.9 GB",img:"",apk:"https://mediafire.com",obb:"",data:"",yt:""},
+{id:14,name:"PPSSPP GOLD",price:0,cat:"Bure",plat:"Android",ram:"RAM 1GB+",size:"32 MB",img:"",apk:"https://mediafire.com",obb:"",data:"",yt:""}
+];
+
+var games=gs('cb_g3',seed),wal=parseInt(localStorage.getItem('cb_w'))||0,cat='Zote',curG=null;
+var logs=gs('cb_lg',new Array()),myG=gs('cb_mg',new Array()),unl=gs('cb_ul',new Array()),bans=gs('cb_bn',new Array());
+
+function logEv(t,d){logs.unshift({tm:new Date().toLocaleTimeString(),t:t,d:d});ss('cb_lg',logs);}
+function upW(){document.getElementById('wBal').innerText=wal.toLocaleString();document.getElementById('mWal').innerText=wal.toLocaleString();localStorage.setItem('cb_w',wal);}
+upW();
+
+var lv=0;try{lv=parseInt(sessionStorage.getItem('cb_lv'))||0;if(!sessionStorage.getItem('cb_c')){lv++;sessionStorage.setItem('cb_c','1');sessionStorage.setItem('cb_lv',lv);}}catch(e){}
+document.getElementById('lCnt').innerText=lv;
+
+function setAdm(st){localStorage.setItem('cb_ao',st);var p=document.getElementById('admPill');p.style.color=st?'#38bdf8':'#ff3d00';p.style.borderColor=st?'#38bdf8':'#ff3d00';p.innerHTML='<span class="dot"></span> '+(st?'Admin: Mtandaoni':'Admin: Hayupo');}
+setAdm(localStorage.getItem('cb_ao')!=='false');
+
+var sec=parseInt(localStorage.getItem('cb_sc'))||0;
+setInterval(function(){sec++;localStorage.setItem('cb_sc',sec);var h=String(Math.floor(sec/3600)).padStart(2,'0'),m=String(Math.floor((sec%3600)/60)).padStart(2,'0'),s=String(sec%60).padStart(2,'0');document.getElementById('tmr').innerText=h+':'+m+':'+s;if(sec===10800&&!localStorage.getItem('cb_3h')){wal+=100;localStorage.setItem('cb_3h','1');upW();}},1000);
+
+function goWA(p,t){window.location.href="whatsapp://send?phone="+p+"&text="+encodeURIComponent(t);}
+function goChan(){window.location.href="whatsapp://channel/0029Vb97GTm4tRrzxF2OCM36";setTimeout(function(){window.open("https://whatsapp.com","_blank");},600);}
+function shareApp(){var t="Pakua CbAdminGamez kujipatia magame makali: "+window.location.href;window.location.href="whatsapp://send?text="+encodeURIComponent(t);}
+
+function drawG(){
+  var q=document.getElementById('qIn').value.toLowerCase(),box=document.getElementById('gWrap'),fl=new Array();
+  for(var i=0;i<games.length;i++){var g=games[i];if((cat==='Zote'||g.cat===cat)&&g.name.toLowerCase().indexOf(q)!==-1)fl.push(g);}
+  var out='',rn=1;
+  for(var st=0;st<fl.length;st+=7){
+    var rh='',en=Math.min(st+7,fl.length);
+    for(var j=st;j<en;j++){
+      var it=fl[j],pr=it.price===0?'BURE':'TZS '+it.price.toLocaleString();
+      var im=it.img?'<img src="'+it.img+'">':'<b style="color:#00e676;font-size:20px">🎮 CB</b>';
+      rh+='<div class="gcard" onclick="openDet('+it.id+')"><div class="cimg"><span class="pbdg">'+it.plat+'</span>'+im+'</div><div class="cbody"><div><div style="font-size:12px;font-weight:800;margin-bottom:5px">'+it.name+'</div><div style="display:flex;gap:4px;flex-wrap:wrap"><span class="tag">'+pr+'</span><span class="tag">'+it.size+'</span></div></div><button class="bview">TAZAMA GAME →</button></div></div>';
+    }
+    out+='<div class="row-sec"><div class="row-lbl">🔥 SAFU YA '+rn+' ('+(en-st)+' GAMES) <span style="color:#94a3b8;font-weight:normal">Telezesha →</span></div><div class="hrow">'+rh+'</div></div>';
+    rn++;
+  }
+  box.innerHTML=out||'<p style="text-align:center;padding:20px;color:#94a3b8">Hakuna game.</p>';
+}
+drawG();
+
+function setCat(c,el){cat=c;var cs=document.querySelectorAll('.cat');for(var i=0;i<cs.length;i++)cs[i].classList.remove('act');el.classList.add('act');drawG();}
+function showP(id){var ps=document.querySelectorAll('.page');for(var i=0;i<ps.length;i++)ps[i].classList.remove('act');document.getElementById(id).classList.add('act');window.scrollTo(0,0);}
+function openM(id){document.getElementById(id).classList.add('open');}
+function closeM(id){document.getElementById(id).classList.remove('open');}
+
+function openDet(id){
+  curG=games.find(function(g){return g.id===id;});if(!curG)return;
+  document.getElementById('dHero').innerHTML=curG.img?'<img src="'+curG.img+'">':'<div style="text-align:center;padding:25px"><div style="font-size:44px">🎮</div><b style="color:#00e676;font-size:18px">'+curG.name+'</b></div>';
+  document.getElementById('dTitle').innerText=curG.name;
+  document.getElementById('dPlat').innerText=curG.plat;
+  document.getElementById('dRam').innerText=curG.ram;
+  document.getElementById('dSize').innerText=curG.size;
+  document.getElementById('dPrice').innerText=curG.price===0?'BURE (TZS 0)':'TZS '+curG.price.toLocaleString();
+  document.getElementById('dVidBox').style.display=curG.yt?'block':'none';
+  var ok=curG.price===0||unl.indexOf(curG.id)!==-1;
+  if(ok){document.getElementById('dBtn').innerText="⬇️ DOWNLOAD GAME SASA";unlk(false);}
+  else{document.getElementById('dBtn').innerText="⚡ BONYEZA HAPA KUNUNUA GAME";document.getElementById('dLock').innerText="🔒 LIMEFUNGWA";document.getElementById('dlLinks').style.display='none';}
+  showP('detP');
+}
+function openVid(){if(curG&&curG.yt)window.open(curG.yt,'_blank');}
+function buyAct(){if(curG.price===0||unl.indexOf(curG.id)!==-1)unlk(true);else{document.getElementById('mPrice').innerText='TZS '+curG.price.toLocaleString();document.getElementById('rgbBox').style.display='none';openM('payM');}}
+function unlk(sv){
+  document.getElementById('dLock').innerText="🔓 LIMEFUNGULIWA";
+  var a=document.getElementById('dlLinks');a.style.display='block';
+  var h='<a href="'+curG.apk+'" target="_blank" onclick="dlAl()" style="display:block;background:#00e676;color:#000;text-align:center;padding:10px;border-radius:8px;font-weight:900;text-decoration:none;margin-bottom:7px">⬇️ PAKUA FAILI KUU</a>';
+  if(curG.obb)h+='<a href="'+curG.obb+'" target="_blank" onclick="dlAl()" style="display:block;background:#2979ff;color:#fff;text-align:center;padding:10px;border-radius:8px;font-weight:900;text-decoration:none;margin-bottom:7px">⬇️ PAKUA OBB</a>';
+  if(curG.data)h+='<a href="'+curG.data+'" target="_blank" onclick="dlAl()" style="display:block;background:#ffab00;color:#000;text-align:center;padding:10px;border-radius:8px;font-weight:900;text-decoration:none">⬇️ PAKUA DATA</a>';
+  a.innerHTML=h;
+  if(sv&&!myG.some(function(m){return m.id===curG.id;})){myG.push({id:curG.id,name:curG.name,apk:curG.apk,exp:Date.now()+172800000});ss('cb_mg',myG);}
+}
+function dlAl(){logEv("⬇️ DOWNLOAD",curG.name);alert("⚠️ TAHADHARI: Download ndani ya MASAA 2! Link ipo 'Magame Yangu' kwa SIKU 2.");if(!localStorage.getItem('cb_b_'+curG.id)){wal+=1000;localStorage.setItem('cb_b_'+curG.id,'1');upW();}}
+function confPay(){var p=document.getElementById('cPhone').value.trim();if(!p)return alert("Weka namba yako!");document.getElementById('rgbBox').style.display='block';logEv("💰 MALIPO",p+" amelipia "+curG.name);}
+function sendPayWA(){var p=document.getElementById('cPhone').value.trim();goWA('255790188644',"Habari CbAdminGamez! Nimelipia "+curG.name+" (TZS "+curG.price+"). Namba: "+p);}
+function payWal(){if(wal<15000)return alert("Wallet haijafikisha TZS 15,000!");if(wal<curG.price)return alert("Salio halitoshi!");wal-=curG.price;upW();unl.push(curG.id);ss('cb_ul',unl);closeM('payM');unlk(true);alert("✅ Imekamilika!");}
+function doReg(){if(localStorage.getItem('cb_rg'))return alert("Umeshapewa zawadi ya kujisajili!");var n=document.getElementById('rName').value.trim(),p=document.getElementById('rPhone').value.trim();if(!n||!p)return alert("Jaza vyote!");ss('cb_rg',{n:n,p:p});logEv("👤 USAJILI",n+" ("+p+")");wal+=1000;upW();closeM('regM');alert("🎉 Karibu "+n+"! Umepewa +1,000 TZS.");}
+function soc(t,a){if(!localStorage.getItem('cb_s_'+t)){localStorage.setItem('cb_s_'+t,'1');wal+=a;upW();}if(t==='wa')goChan();else window.open('https://youtube.com','_blank');}
+function openMyG(){var l=document.getElementById('myGList'),nw=Date.now();myG=myG.filter(function(m){return m.exp>nw;});ss('cb_mg',myG);l.innerHTML=myG.length?myG.map(function(m){return '<div style="background:#1e293b;padding:9px;border-radius:8px;margin-bottom:7px"><b>'+m.name+'</b><br><a href="'+m.apk+'" target="_blank" style="color:#00e676">Fungua Link</a></div>';}).join(''):"Hakuna game.";openM('myGM');}
+function doOrd(){var g=document.getElementById('oGame').value.trim(),d=document.getElementById('oDev').value.trim();if(!g)return alert("Andika game!");logEv("📝 ORDER",g);goWA('255790188644',"ORDER: "+g+" ("+d+")");}
+
+function openLock(){var p=prompt("🔒 PIN ya Admin:");if(p==="3698"){drawAdm();showP('admP');}else if(p!==null){logEv("🚨 MSUMBUFU","Mtu amejaribu kufuli la Admin!");alert("⛔ ERROR!");}}
+function drawAdm(){
+  document.getElementById('admFeed').innerHTML=logs.length?logs.map(function(l){return '<div style="background:#0b1120;padding:7px;border-radius:7px;margin-bottom:5px;border-left:3px solid #00e676"><b style="color:#ffea00">['+l.tm+'] '+l.t+'</b><br>'+l.d+'</div>';}).join(''):"Hakuna tukio.";
+  document.getElementById('uGame').innerHTML=games.map(function(g){return '<option value="'+g.id+'">'+g.name+'</option>';}).join('');
+  document.getElementById('admGList').innerHTML=games.map(function(g){return '<div style="display:flex;justify-content:space-between;background:#0b1120;padding:7px;border-radius:7px;margin-bottom:5px"><span>'+g.name+'</span><button onclick="delG('+g.id+')" style="background:#ff1744;color:#fff;border:none;padding:4px 8px;border-radius:5px">Futa</button></div>';}).join('');
+}
+function admUnlock(){var p=document.getElementById('uPhone').value.trim(),id=parseInt(document.getElementById('uGame').value);if(!p)return alert("Weka namba!");if(unl.indexOf(id)===-1){unl.push(id);ss('cb_ul',unl);}logEv("🔓 RUHUSA","Link imefunguliwa kwa "+p);alert("✅ Link imefunguliwa!");}
+function addG(){
+  var fi=document.getElementById('nImg'),nm=document.getElementById('nName').value.trim(),pr=parseInt(document.getElementById('nPrice').value)||0,ct=document.getElementById('nCat').value,pl=document.getElementById('nPlat').value,rm=document.getElementById('nRam').value,sz=(document.getElementById('nSNum').value||'1.0')+' '+document.getElementById('nSUnit').value,ak=document.getElementById('nApk').value.trim(),ob=document.getElementById('nObb').value.trim(),dt=document.getElementById('nData').value.trim(),yt=document.getElementById('nYt').value.trim();
+  if(!nm||!ak)return alert("Jaza Jina na Link Kuu!");
+  var svG=function(im){games.unshift({id:Date.now(),name:nm,price:pr,cat:ct,plat:pl,ram:rm,size:sz,img:im,apk:ak,obb:ob,data:dt,yt:yt});ss('cb_g3',games);drawG();drawAdm();alert("✅ Game limepandishwa!");};
+  if(fi.files&&fi.files.item(0)){var r=new FileReader();r.onload=function(e){svG(e.target.result);};r.readAsDataURL(fi.files.item(0));}else svG('');
+}
+function delG(id){games=games.filter(function(g){return g.id!==id;});ss('cb_g3',games);drawG();drawAdm();}
+function setTkr(){var t=document.getElementById('tIn').value.trim();if(t){document.getElementById('tkrTxt').innerText=t;alert("📢 Tangazo limetumwa!");}}
+function ctrlU(ac){var p=document.getElementById('trPhone').value.trim();if(!p)return alert("Weka namba!");if(ac==='ban'){bans.push(p);ss('cb_bn',bans);alert("⛔ Amefungiwa!");}else if(ac==='unban'){bans=bans.filter(function(x){return x!==p;});ss('cb_bn',bans);alert("✅ Amefunguliwa!");}else{localStorage.setItem('cb_wn_'+p,'1');alert("⚠️ Last Chance imewekwa!");}}
+var rg=gs('cb_rg',null);if(rg&&rg.p){if(bans.indexOf(rg.p)!==-1)document.getElementById('banned').style.display='flex';else if(localStorage.getItem('cb_wn_'+rg.p))alert("⚠️ ONYO LA MWISHO (LAST CHANCE)!");}
+</script>
+</body>
+</html>

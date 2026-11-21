@@ -1,0 +1,21 @@
+ {
+  "name": "CbAdminGamez",
+  "short_name": "CbAdminGamez",
+  "description": "Pakua Magame ya Android, PC, PS, Bus Mods TZ, GTA na Football",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#090d16",
+  "theme_color": "#00ff88",
+  "icons": [
+    {
+      "src": "/icon.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/icon.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
