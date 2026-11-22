@@ -379,5 +379,144 @@ function setTkr(){var t=document.getElementById('tIn').value.trim();if(t){docume
 function ctrlU(ac){var p=document.getElementById('trPhone').value.trim();if(!p)return alert("Weka namba!");if(ac==='ban'){bans.push(p);ss('cb_bn',bans);alert("⛔ Amefungiwa!");}else if(ac==='unban'){bans=bans.filter(function(x){return x!==p;});ss('cb_bn',bans);alert("✅ Amefunguliwa!");}else{localStorage.setItem('cb_wn_'+p,'1');alert("⚠️ Last Chance imewekwa!");}}
 var rg=gs('cb_rg',null);if(rg&&rg.p){if(bans.indexOf(rg.p)!==-1)document.getElementById('banned').style.display='flex';else if(localStorage.getItem('cb_wn_'+rg.p))alert("⚠️ ONYO LA MWISHO (LAST CHANCE)!");}
 </script>
+<script type="module">
+  import { initializeApp } from "https://gstatic.com";
+  import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, addDoc, query, orderBy, limit } from "https://gstatic.com";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBi70xab4bGqwBpVUBfAm4qS3sp1OMrW0g",
+    authDomain: "firebaseapp.com",
+    projectId: "cbadmingamez",
+    storageBucket: "cbadmingamez.firebasestorage.app",
+    messagingSenderId: "1030877025380",
+    appId: "1:1030877025380:web:a36ec734cd4b32e177bb71"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const myRg = gs('cb_rg', null);
+  const sid = gs('cb_sid', 'u_' + Math.random().toString(36).slice(2, 10));
+  ss('cb_sid', sid);
+
+  onSnapshot(collection(db, "games"), (snap) => {
+    const arr = new Array();
+    snap.forEach(d => arr.push(d.data()));
+    arr.sort((a, b) => b.id - a.id);
+    if (arr.length > 0) {
+      games = arr;
+      ss('cb_g3', arr);
+      drawG();
+      if (typeof drawAdm === "function") drawAdm();
+    }
+  });
+
+  onSnapshot(doc(db, "settings", "app"), (d) => {
+    if (!d.exists()) return;
+    const data = d.data();
+    if (data.ticker) document.getElementById("tkrTxt").innerText = data.ticker;
+    const pill = document.getElementById("admPill");
+    if (data.adminStatus === "offline") {
+      pill.style.color = "#ff1744"; pill.style.borderColor = "#ff1744";
+      pill.innerHTML = '<span class="dot"></span> Admin: Hayupo';
+    } else {
+      pill.style.color = "#38bdf8"; pill.style.borderColor = "#38bdf8";
+      pill.innerHTML = '<span class="dot"></span> Admin: Mtandaoni';
+    }
+  });
+
+  onSnapshot(query(collection(db, "logs"), orderBy("ts", "desc"), limit(30)), (snap) => {
+    logs = new Array();
+    snap.forEach(d => logs.push(d.data()));
+    if (typeof drawAdm === "function") drawAdm();
+  });
+
+  setDoc(doc(db, "presence", sid), { ts: Date.now() });
+  setInterval(() => setDoc(doc(db, "presence", sid), { ts: Date.now() }), 30000);
+  onSnapshot(collection(db, "presence"), (snap) => {
+    let active = 0, now = Date.now();
+    snap.forEach(d => { if (now - d.data().ts < 70000) active++; });
+    document.getElementById("lCnt").innerText = active;
+  });
+
+  if (myRg && myRg.p) {
+    onSnapshot(doc(db, "users", myRg.p), (d) => {
+      if (!d.exists()) return;
+      const u = d.data();
+      document.getElementById("banned").style.display = u.banned ? "flex" : "none";
+      if (u.warned && !localStorage.getItem("cb_w_seen")) {
+        localStorage.setItem("cb_w_seen", "1");
+        alert("⚠️ ONYO LA MWISHO (LAST CHANCE) KUTOKA KWA ADMIN!");
+      }
+      if (Array.isArray(u.unlocked)) {
+        u.unlocked.forEach(id => { if (unl.indexOf(id) === -1) unl.push(id); });
+        ss("cb_ul", unl);
+      }
+    });
+  }
+
+  window.logEv = async function(t, d) {
+    const tm = new Date().toLocaleTimeString('en-GB', {hour: '2-digit', minute:'2-digit'});
+    await addDoc(collection(db, "logs"), { t, d, tm, ts: Date.now() });
+  };
+
+  window.doReg = async function() {
+    if (localStorage.getItem('cb_rg')) return alert("Umeshapewa zawadi ya kujisajili!");
+    const n = document.getElementById('rName').value.trim(), p = document.getElementById('rPhone').value.trim();
+    if (!n || !p) return alert("Jaza vyote!");
+    ss('cb_rg', { n, p });
+    await setDoc(doc(db, "users", p), { name: n, phone: p, banned: false, warned: false, unlocked: new Array() }, { merge: true });
+    await window.logEv("👤 USAJILI", n + " (" + p + ")");
+    wal += 1000; upW(); closeM('regM');
+    alert("🎉 Karibu " + n + "! Umepewa +1,000 TZS.");
+  };
+
+  window.addG = function() {
+    const fi = document.getElementById('nImg'), nm = document.getElementById('nName').value.trim();
+    const pr = parseInt(document.getElementById('nPrice').value) || 0, ct = document.getElementById('nCat').value;
+    const pl = document.getElementById('nPlat').value, rm = document.getElementById('nRam').value;
+    const sz = (document.getElementById('nSNum').value || '1.0') + ' ' + document.getElementById('nSUnit').value;
+    const ak = document.getElementById('nApk').value.trim(), ob = document.getElementById('nObb').value.trim();
+    const dt = document.getElementById('nData').value.trim(), yt = document.getElementById('nYt').value.trim();
+    if (!nm || !ak) return alert("Jaza Jina na Link Kuu!");
+    const saveFb = async (im) => {
+      const id = Date.now();
+      await setDoc(doc(db, "games", String(id)), { id, name: nm, price: pr, cat: ct, plat: pl, ram: rm, size: sz, img: im, apk: ak, obb: ob, data: dt, yt: yt });
+      alert("✅ Game limepandishwa LIVE kwa wateja wote!");
+    };
+    if (fi.files && fi.files.item(0)) {
+      const r = new FileReader();
+      r.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const c = document.createElement("canvas"), sc = Math.min(1, 400 / img.width);
+          c.width = img.width * sc; c.height = img.height * sc;
+          c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+          saveFb(c.toDataURL("image/jpeg", 0.65));
+        };
+        img.src = e.target.result;
+      };
+      r.readAsDataURL(fi.files.item(0));
+    } else saveFb("");
+  };
+
+  window.delG = async function(id) { await deleteDoc(doc(db, "games", String(id))); };
+  window.setAdmSt = async function(st) { await setDoc(doc(db, "settings", "app"), { adminStatus: st }, { merge: true }); alert("✅ Hali ya Admin imebadilishwa LIVE!"); };
+  window.setTkr = async function() { const t = document.getElementById('tIn').value.trim(); if (t) { await setDoc(doc(db, "settings", "app"), { ticker: t }, { merge: true }); alert("📢 Tangazo limetumwa LIVE!"); } };
+  window.admUnlock = async function() {
+    const p = document.getElementById('uPhone').value.trim(), id = parseInt(document.getElementById('uGame').value);
+    if (!p) return alert("Weka namba!");
+    await setDoc(doc(db, "users", p), { unlocked: new Array(id) }, { merge: true });
+    await window.logEv("🔓 RUHUSA", "Link imefunguliwa kwa " + p);
+    alert("✅ Link imefunguliwa LIVE kwa " + p + "!");
+  };
+  window.ctrlU = async function(ac) {
+    const p = document.getElementById('trPhone').value.trim();
+    if (!p) return alert("Weka namba!");
+    if (ac === 'ban') { await setDoc(doc(db, "users", p), { banned: true }, { merge: true }); alert("⛔ Amefungiwa LIVE!"); }
+    else if (ac === 'unban') { await setDoc(doc(db, "users", p), { banned: false }, { merge: true }); alert("✅ Amefunguliwa LIVE!"); }
+    else { await setDoc(doc(db, "users", p), { warned: true }, { merge: true }); alert("⚠️ Last Chance imetumwa LIVE!"); }
+  };
+</script>
 </body>
 </html>
+        
