@@ -343,22 +343,46 @@ function openDet(id){
 }
 function openVid(){if(curG&&curG.yt)window.open(curG.yt,'_blank');}
 function buyAct(){if(curG.price===0||unl.indexOf(curG.id)!==-1)unlk(true);else{document.getElementById('mPrice').innerText='TZS '+curG.price.toLocaleString();document.getElementById('rgbBox').style.display='none';openM('payM');}}
+function noFileMsg(aina){
+  alert("ℹ️ Taarifa: Game hili linatumia faili la APK pekee. Hakuna faili la " + aina + " lililowekwa na Admin kwa ajili ya game hili.");
+}
 function unlk(sv){
   document.getElementById('dLock').innerText="🔓 LIMEFUNGULIWA";
   var a=document.getElementById('dlLinks');a.style.display='block';
-  var h='<a href="'+curG.apk+'" target="_blank" onclick="dlAl()" style="display:block;background:#00e676;color:#000;text-align:center;padding:10px;border-radius:8px;font-weight:900;text-decoration:none;margin-bottom:7px">⬇️ PAKUA FAILI KUU</a>';
-  if(curG.obb)h+='<a href="'+curG.obb+'" target="_blank" onclick="dlAl()" style="display:block;background:#2979ff;color:#fff;text-align:center;padding:10px;border-radius:8px;font-weight:900;text-decoration:none;margin-bottom:7px">⬇️ PAKUA OBB</a>';
-  if(curG.data)h+='<a href="'+curG.data+'" target="_blank" onclick="dlAl()" style="display:block;background:#ffab00;color:#000;text-align:center;padding:10px;border-radius:8px;font-weight:900;text-decoration:none">⬇️ PAKUA DATA</a>';
+  var h='';
+  if(curG.data&&curG.data.trim()!==""){
+    h+='<a href="'+curG.data+'" target="_blank" onclick="dlAl()" style="display:block;background:#ffab00;color:#000;text-align:center;padding:11px;border-radius:8px;font-weight:900;text-decoration:none;margin-bottom:7px">⬇️ PAKUA DATA</a>';
+  }else{
+    h+='<button type="button" onclick="noFileMsg(\'DATA\')" style="width:100%;display:block;background:#1e293b;color:#cbd5e1;border:1px solid #475569;text-align:center;padding:10px;border-radius:8px;font-weight:bold;margin-bottom:7px">🚫 PAKUA DATA (Hakuna Data)</button>';
+  }
+  if(curG.obb&&curG.obb.trim()!==""){
+    h+='<a href="'+curG.obb+'" target="_blank" onclick="dlAl()" style="display:block;background:#2979ff;color:#fff;text-align:center;padding:11px;border-radius:8px;font-weight:900;text-decoration:none;margin-bottom:7px">⬇️ PAKUA OBB</a>';
+  }else{
+    h+='<button type="button" onclick="noFileMsg(\'OBB\')" style="width:100%;display:block;background:#1e293b;color:#cbd5e1;border:1px solid #475569;text-align:center;padding:10px;border-radius:8px;font-weight:bold;margin-bottom:7px">🚫 PAKUA OBB (Hakuna OBB)</button>';
+  }
+  h+='<a href="'+curG.apk+'" target="_blank" onclick="dlAl()" style="display:block;background:#00e676;color:#000;text-align:center;padding:11px;border-radius:8px;font-weight:900;text-decoration:none">⬇️ PAKUA APK (FAILI KUU)</a>';
   a.innerHTML=h;
-  if(sv&&!myG.some(function(m){return m.id===curG.id;})){myG.push({id:curG.id,name:curG.name,apk:curG.apk,exp:Date.now()+172800000});ss('cb_mg',myG);}
+  if(sv&&!localStorage.getItem('cb_b_'+curG.id)){wal+=500;localStorage.setItem('cb_b_'+curG.id,'1');upW();}
+  if(sv&&!myG.some(function(m){return m.id===curG.id;})){myG.push({id:curG.id,name:curG.name,apk:curG.apk,obb:curG.obb||'',data:curG.data||'',exp:Date.now()+172800000});ss('cb_mg',myG);}
 }
-function dlAl(){logEv("⬇️ DOWNLOAD",curG.name);alert("⚠️ TAHADHARI: Download ndani ya MASAA 2! Link ipo 'Magame Yangu' kwa SIKU 2.");if(!localStorage.getItem('cb_b_'+curG.id)){wal+=1000;localStorage.setItem('cb_b_'+curG.id,'1');upW();}}
+function dlAl(){logEv("⬇️ DOWNLOAD",curG.name);alert("⚠️ TAHADHARI: Download ndani ya MASAA 2! Link ipo 'Magame Yangu' kwa SIKU 2.");}
 function confPay(){var p=document.getElementById('cPhone').value.trim();if(!p)return alert("Weka namba yako!");document.getElementById('rgbBox').style.display='block';logEv("💰 MALIPO",p+" amelipia "+curG.name);}
 function sendPayWA(){var p=document.getElementById('cPhone').value.trim();goWA('255790188644',"Habari CbAdminGamez! Nimelipia "+curG.name+" (TZS "+curG.price+"). Namba: "+p);}
 function payWal(){if(wal<15000)return alert("Wallet haijafikisha TZS 15,000!");if(wal<curG.price)return alert("Salio halitoshi!");wal-=curG.price;upW();unl.push(curG.id);ss('cb_ul',unl);closeM('payM');unlk(true);alert("✅ Imekamilika!");}
 function doReg(){if(localStorage.getItem('cb_rg'))return alert("Umeshapewa zawadi ya kujisajili!");var n=document.getElementById('rName').value.trim(),p=document.getElementById('rPhone').value.trim();if(!n||!p)return alert("Jaza vyote!");ss('cb_rg',{n:n,p:p});logEv("👤 USAJILI",n+" ("+p+")");wal+=1000;upW();closeM('regM');alert("🎉 Karibu "+n+"! Umepewa +1,000 TZS.");}
 function soc(t,a){if(!localStorage.getItem('cb_s_'+t)){localStorage.setItem('cb_s_'+t,'1');wal+=a;upW();}if(t==='wa')goChan();else window.open('https://youtube.com','_blank');}
-function openMyG(){var l=document.getElementById('myGList'),nw=Date.now();myG=myG.filter(function(m){return m.exp>nw;});ss('cb_mg',myG);l.innerHTML=myG.length?myG.map(function(m){return '<div style="background:#1e293b;padding:9px;border-radius:8px;margin-bottom:7px"><b>'+m.name+'</b><br><a href="'+m.apk+'" target="_blank" style="color:#00e676">Fungua Link</a></div>';}).join(''):"Hakuna game.";openM('myGM');}
+function openMyG(){
+  var l=document.getElementById('myGList'),nw=Date.now();
+  myG=myG.filter(function(m){return m.exp>nw;});ss('cb_mg',myG);
+  l.innerHTML=myG.length?myG.map(function(m){
+    var bData=m.data?'<a href="'+m.data+'" target="_blank" style="display:block;background:#ffab00;color:#000;text-align:center;padding:7px;border-radius:6px;font-weight:bold;text-decoration:none;margin:5px 0">⬇️ PAKUA DATA</a>':'<button type="button" onclick="noFileMsg(\'DATA\')" style="width:100%;background:#0f172a;color:#94a3b8;border:1px solid #475569;padding:6px;border-radius:6px;margin:5px 0">🚫 DATA (Hakuna Data)</button>';
+    var bObb=m.obb?'<a href="'+m.obb+'" target="_blank" style="display:block;background:#2979ff;color:#fff;text-align:center;padding:7px;border-radius:6px;font-weight:bold;text-decoration:none;margin-bottom:5px">⬇️ PAKUA OBB</a>':'<button type="button" onclick="noFileMsg(\'OBB\')" style="width:100%;background:#0f172a;color:#94a3b8;border:1px solid #475569;padding:6px;border-radius:6px;margin-bottom:5px">🚫 OBB (Hakuna OBB)</button>';
+    var bApk='<a href="'+m.apk+'" target="_blank" style="display:block;background:#00e676;color:#000;text-align:center;padding:7px;border-radius:6px;font-weight:bold;text-decoration:none">⬇️ PAKUA APK</a>';
+    return '<div style="background:#1e293b;padding:10px;border-radius:9px;margin-bottom:8px;border:1px solid #334155"><b style="color:#ffea00">'+m.name+'</b>'+bData+bObb+bApk+'</div>';
+  }).join(''):"Hakuna game bado.";
+  openM('myGM');
+}
+
 function doOrd(){var g=document.getElementById('oGame').value.trim(),d=document.getElementById('oDev').value.trim();if(!g)return alert("Andika game!");logEv("📝 ORDER",g);goWA('255790188644',"ORDER: "+g+" ("+d+")");}
 
 function openLock(){var p=prompt("🔒 PIN ya Admin:");if(p==="3698"){drawAdm();showP('admP');}else if(p!==null){logEv("🚨 MSUMBUFU","Mtu amejaribu kufuli la Admin!");alert("⛔ ERROR!");}}
@@ -516,7 +540,40 @@ var rg=gs('cb_rg',null);if(rg&&rg.p){if(bans.indexOf(rg.p)!==-1)document.getElem
     else if (ac === 'unban') { await setDoc(doc(db, "users", p), { banned: false }, { merge: true }); alert("✅ Amefunguliwa LIVE!"); }
     else { await setDoc(doc(db, "users", p), { warned: true }, { merge: true }); alert("⚠️ Last Chance imetumwa LIVE!"); }
   };
+window.noFileMsg = function(aina){
+  alert("ℹ️ Taarifa: Game hili linatumia faili la APK pekee. Hakuna faili la " + aina + " lililowekwa na Admin kwa ajili ya game hili.");
+};
+ window.noFileMsg = function(aina){
+  alert("ℹ️ Taarifa: Game hili linatumia faili la APK pekee. Hakuna faili la " + aina + " lililowekwa na Admin kwa ajili ya game hili.");
+};
+window.unlk = function(sv){
+  document.getElementById('dLock').innerText="🔓 LIMEFUNGULIWA";
+  var a=document.getElementById('dlLinks');
+  a.style.display='block';
+  var h='<a href="'+curG.apk+'" target="_blank" onclick="dlAl()" style="display:block;background:#00e676;color:#000;text-align:center;padding:12px;border-radius:8px;font-weight:900;text-decoration:none;margin-bottom:8px">⬇️ PAKUA APK (FAILI KUU)</a>';
+  if(curG.obb && curG.obb.trim()!==""){
+    h+='<a href="'+curG.obb+'" target="_blank" onclick="dlAl()" style="display:block;background:#2979ff;color:#fff;text-align:center;padding:12px;border-radius:8px;font-weight:900;text-decoration:none;margin-bottom:8px">⬇️ PAKUA OBB</a>';
+  }else{
+    h+='<button type="button" onclick="noFileMsg(\'OBB\')" style="width:100%;display:block;background:#1e293b;color:#cbd5e1;border:1px solid #475569;text-align:center;padding:11px;border-radius:8px;font-weight:bold;margin-bottom:8px">🚫 PAKUA OBB (Hakuna OBB)</button>';
+  }
+  if(curG.data && curG.data.trim()!==""){
+    h+='<a href="'+curG.data+'" target="_blank" onclick="dlAl()" style="display:block;background:#ffab00;color:#000;text-align:center;padding:12px;border-radius:8px;font-weight:900;text-decoration:none;margin-bottom:4px">⬇️ PAKUA DATA</a>';
+  }else{
+    h+='<button type="button" onclick="noFileMsg(\'DATA\')" style="width:100%;display:block;background:#1e293b;color:#cbd5e1;border:1px solid #475569;text-align:center;padding:11px;border-radius:8px;font-weight:bold;margin-bottom:4px">🚫 PAKUA DATA (Hakuna Data)</button>';
+  }
+  a.innerHTML=h;
+  if(sv && !localStorage.getItem('cb_buy_b_'+curG.id)){
+    wal = Number(wal) + 500;
+    localStorage.setItem('cb_buy_b_'+curG.id, '1');
+    upW();
+  }
+  if(sv&&!myG.some(function(m){return m.id===curG.id;})){myG.push({id:curG.id,name:curG.name,apk:curG.apk,exp:Date.now()+172800000});ss('cb_mg',myG);}
+};
+window.dlAl = function(){
+  if(typeof logEv === "function") logEv("⬇️ DOWNLOAD",curG.name);
+  alert("⚠️ TAHADHARI: Download ndani ya MASAA 2! Link ipo 'Magame Yangu' kwa SIKU 2.");
+};
 </script>
 </body>
 </html>
-        
+ 
