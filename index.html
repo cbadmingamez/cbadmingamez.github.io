@@ -6,7 +6,14 @@
 <title>CbAdminGamez</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#00e676">
-<link rel="apple-touch-icon" href="icon.jpg">
+<link rel="apple-touch-icon" href="icon.jpg"> <link rel="icon" type="image/jpeg" href="icon.jpg">
+<link rel="shortcut icon" href="icon.jpg">
+<meta property="og:title" content="CbAdminGamez">
+<meta property="og:description" content="Pakua magame makali ya Android, PC na PS kwenye CbAdminGamez!">
+<meta property="og:image" content="https://github.io">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://github.io">
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif;-webkit-tap-highlight-color:transparent}
 body{background:#070b14;color:#fff;padding-bottom:80px;overflow-x:hidden}
@@ -533,47 +540,8 @@ var rg=gs('cb_rg',null);if(rg&&rg.p){if(bans.indexOf(rg.p)!==-1)document.getElem
     await window.logEv("🔓 RUHUSA", "Link imefunguliwa kwa " + p);
     alert("✅ Link imefunguliwa LIVE kwa " + p + "!");
   };
-  window.ctrlU = async function(ac) {
-    const p = document.getElementById('trPhone').value.trim();
-    if (!p) return alert("Weka namba!");
-    if (ac === 'ban') { await setDoc(doc(db, "users", p), { banned: true }, { merge: true }); alert("⛔ Amefungiwa LIVE!"); }
-    else if (ac === 'unban') { await setDoc(doc(db, "users", p), { banned: false }, { merge: true }); alert("✅ Amefunguliwa LIVE!"); }
-    else { await setDoc(doc(db, "users", p), { warned: true }, { merge: true }); alert("⚠️ Last Chance imetumwa LIVE!"); }
-  };
-window.noFileMsg = function(aina){
-  alert("ℹ️ Taarifa: Game hili linatumia faili la APK pekee. Hakuna faili la " + aina + " lililowekwa na Admin kwa ajili ya game hili.");
-};
- window.noFileMsg = function(aina){
-  alert("ℹ️ Taarifa: Game hili linatumia faili la APK pekee. Hakuna faili la " + aina + " lililowekwa na Admin kwa ajili ya game hili.");
-};
-window.unlk = function(sv){
-  document.getElementById('dLock').innerText="🔓 LIMEFUNGULIWA";
-  var a=document.getElementById('dlLinks');
-  a.style.display='block';
-  var h='<a href="'+curG.apk+'" target="_blank" onclick="dlAl()" style="display:block;background:#00e676;color:#000;text-align:center;padding:12px;border-radius:8px;font-weight:900;text-decoration:none;margin-bottom:8px">⬇️ PAKUA APK (FAILI KUU)</a>';
-  if(curG.obb && curG.obb.trim()!==""){
-    h+='<a href="'+curG.obb+'" target="_blank" onclick="dlAl()" style="display:block;background:#2979ff;color:#fff;text-align:center;padding:12px;border-radius:8px;font-weight:900;text-decoration:none;margin-bottom:8px">⬇️ PAKUA OBB</a>';
-  }else{
-    h+='<button type="button" onclick="noFileMsg(\'OBB\')" style="width:100%;display:block;background:#1e293b;color:#cbd5e1;border:1px solid #475569;text-align:center;padding:11px;border-radius:8px;font-weight:bold;margin-bottom:8px">🚫 PAKUA OBB (Hakuna OBB)</button>';
-  }
-  if(curG.data && curG.data.trim()!==""){
-    h+='<a href="'+curG.data+'" target="_blank" onclick="dlAl()" style="display:block;background:#ffab00;color:#000;text-align:center;padding:12px;border-radius:8px;font-weight:900;text-decoration:none;margin-bottom:4px">⬇️ PAKUA DATA</a>';
-  }else{
-    h+='<button type="button" onclick="noFileMsg(\'DATA\')" style="width:100%;display:block;background:#1e293b;color:#cbd5e1;border:1px solid #475569;text-align:center;padding:11px;border-radius:8px;font-weight:bold;margin-bottom:4px">🚫 PAKUA DATA (Hakuna Data)</button>';
-  }
-  a.innerHTML=h;
-  if(sv && !localStorage.getItem('cb_buy_b_'+curG.id)){
-    wal = Number(wal) + 500;
-    localStorage.setItem('cb_buy_b_'+curG.id, '1');
-    upW();
-  }
-  if(sv&&!myG.some(function(m){return m.id===curG.id;})){myG.push({id:curG.id,name:curG.name,apk:curG.apk,exp:Date.now()+172800000});ss('cb_mg',myG);}
-};
-window.dlAl = function(){
-  if(typeof logEv === "function") logEv("⬇️ DOWNLOAD",curG.name);
-  alert("⚠️ TAHADHARI: Download ndani ya MASAA 2! Link ipo 'Magame Yangu' kwa SIKU 2.");
-};
+   
 </script>
 </body>
 </html>
- 
+       
